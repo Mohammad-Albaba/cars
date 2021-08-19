@@ -38,6 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if(state is CreateUserSuccessState)
           {
               navigateAndFinish(context, BuyerLayout());
+              // navigateAndFinish(context, SellerLayout());
           }
         },
         builder: (context, state){

@@ -1,5 +1,6 @@
 import 'package:cars/layout/buyer_app/buyer_layout.dart';
 import 'package:cars/layout/seller_app/seller_layout.dart';
+import 'package:cars/modules/register/register_screen.dart';
 import 'package:cars/shared/network/cars_signin_screen.dart';
 import 'package:cars/modules/login/login_screen.dart';
 import 'package:cars/shared/components/components.dart';
@@ -26,7 +27,9 @@ void main() async{
 
   if(uId != null)
   {
+       // widget = UserType.Seller();
        widget = BuyerLayout();
+
     // this.groupValue == UserType.Seller?
     // SellerLayout():
     // BuyerLayout();

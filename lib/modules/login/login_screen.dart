@@ -32,6 +32,7 @@ class LoginScreen extends StatelessWidget
                 value: state.uId,
             ).then((value){
               navigateAndFinish(context, BuyerLayout());
+              // navigateAndFinish(context, SellerLayout());
             });
           }
         },
