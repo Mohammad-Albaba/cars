@@ -1,36 +1,138 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:video_player/video_player.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/styles/colors.dart';
 import '../../../shared/styles/icon_broken.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List location = ['Gaza Strip','Armenia','Angola','Bahamas',];
+
+  String dropDownValue = 'Gaza Strip';
+  var searchController = TextEditingController();
+
+  VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+      'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4',
+    )
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+         shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(14.0),
+          ),
+        ),
+        toolbarHeight: 170,
         backgroundColor: defaultColor,
-        actions: [
-          IconButton(
-            color: Colors.white,
-            icon: Icon(IconBroken.Notification),
-            onPressed: (){},
+        title: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  'Mazad X',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.0,
+                  ),),
+                 Spacer(),
+                Center(
+            child: Container(
+            height: 30,
+            width: 115,
+            decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: Stack(
+              children: <Widget>[
+                DropdownButton<String>(
+                  value: dropDownValue,
+                  //icon: Icon(Icons.arrow_downward),
+                  iconSize: 20,
+                  iconEnabledColor: Colors.black.withOpacity(0.6),
+                  elevation: 16,
+                  style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  underline: Container(),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      dropDownValue = newValue;
+                    });
+                  },
+                  items: location
+                      .map<DropdownMenuItem<String>>((e) {
+                    return DropdownMenuItem<String>(
+                      value: e,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 25.0),
+                        child: Text("$e"),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: Icon(Icons.location_on_outlined,size: 18,color: Colors.black.withOpacity(0.6),)),
+              ],
+            ),
           ),
-          IconButton(
-            color: Colors.white,
-            icon: Icon(IconBroken.Search),
-            onPressed: (){},
-          ),
-        ],
-        title: Text('Mazad X',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20.0,
-          ),),
+                  ),
+                IconButton(
+                  color: Colors.white,
+                  icon: Icon(IconBroken.Notification),
+                  onPressed: (){},
+                ),
+              ],
+            ),
+            SizedBox(height: 25.0,),
+            Container(
+              height: 45.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+              child: defaultFormField(
+                controller: searchController,
+                type: TextInputType.text,
+                onChange: (value)
+                {
+                },
+                validate: (String value)
+                {
+                  if(value.isEmpty)
+                  {
+                    return 'search must not be empty';
+                  }
+                  return null;
+                },
+                label: 'Search for cars',
+
+                prefix: Icons.search,
+              ),
+            ),
+          ],
+        ),
+
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -59,29 +161,32 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'New Auctions',
-                        style: Theme.of(context).textTheme.bodyText1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          'New Auctions',
+                          style: Theme.of(context).textTheme.bodyText1,
 
-                      ),
-                      Spacer(),
-                      Row(
-                        children: [
-                          Text(
-                            'VIEW All',
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'VIEW All',
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: defaultColor,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
                               color: defaultColor,
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: defaultColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,
@@ -98,11 +203,16 @@ class HomeScreen extends StatelessWidget {
                       itemCount: 10,
                     ),
                   ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      'Brands',
+                      style: Theme.of(context).textTheme.bodyText1,
 
-                  Text(
-                    'Brands',
-                    style: Theme.of(context).textTheme.bodyText1,
-
+                    ),
                   ),
                   SizedBox(
                     height: 10.0,
@@ -123,33 +233,33 @@ class HomeScreen extends StatelessWidget {
                     height: 10.0,
                   ),
 
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Hot Auctions',
-                        style: Theme.of(context).textTheme.bodyText1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Hot Auctions',
+                          style: Theme.of(context).textTheme.bodyText1,
 
-                      ),
-                      Icon(Icons.whatshot_rounded,color: Colors.amberAccent,),
-                      Spacer(),
-                      Row(
-                        children: [
-                          Text(
-                            'VIEW All',
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        ),
+                        Icon(Icons.whatshot_rounded,color: Colors.amberAccent,),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'VIEW All',
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: defaultColor,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
                               color: defaultColor,
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: defaultColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,
@@ -167,36 +277,40 @@ class HomeScreen extends StatelessWidget {
                       itemCount: 10,
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),                    child: Row(
+                      children: [
+                        Text(
+                          'Videos',
+                          style: Theme.of(context).textTheme.bodyText1,
 
-                  Row(
-                    children: [
-                      Text(
-                        'Videos',
-                        style: Theme.of(context).textTheme.bodyText1,
-
-                      ),
-                      Spacer(),
-                      Row(
-                        children: [
-                          Text(
-                            'VIEW All',
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'VIEW All',
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: defaultColor,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
                               color: defaultColor,
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: defaultColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Container(
-                    height: 235.0,
+                    height: 165,
                     width: double.infinity,
                     child: ListView.separated(
                       physics: BouncingScrollPhysics(),
@@ -234,29 +348,31 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        'Newly Auctions',
-                        style: Theme.of(context).textTheme.bodyText1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),                    child: Row(
+                      children: [
+                        Text(
+                          'Newly Auctions',
+                          style: Theme.of(context).textTheme.bodyText1,
 
-                      ),
-                      Spacer(),
-                      Row(
-                        children: [
-                          Text(
-                            'VIEW All',
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'VIEW All',
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: defaultColor,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
                               color: defaultColor,
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: defaultColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,
@@ -282,6 +398,7 @@ class HomeScreen extends StatelessWidget {
     );
 
   }
+
   Widget buildCategoryNewAuctionItem(context) => Card(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,11 +523,20 @@ class HomeScreen extends StatelessWidget {
            Column(
             children: [
               SizedBox(height: 10,),
-              SvgPicture.asset(
-                'assets/images/pngfind.svg',
-              width: 48,
-              height: 48,
+              Container(
+                width: 48.0,
+                height: 48.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/pngfind.svg',
+                  width: 48,
+                  height: 48,
+                ),
               ),
+
 
               SizedBox(height: 10,),
               Text(
@@ -517,28 +643,47 @@ class HomeScreen extends StatelessWidget {
     ),
   );
 
-  Widget buildCategoryVideoItem(context) => Card(
+  Widget buildCategoryVideoItem(context) => Padding(
+    padding: const EdgeInsets.only(left: 4.0),
+    child: Container(
+      width: 280.0,
+      height: 230,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+            _controller.value.isInitialized
+              ? AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
 
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            Image(
-              image: NetworkImage(
-                  'https://img.freepik.com/free-photo/blue-jeep-parking-public-zone_114579-4042.jpg?size=626&ext=jpg'
-              ),
-              height: 227.0,
-              width: 210.0,
-              fit: BoxFit.cover,
+          )
+              : Container(),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _controller.value.isPlaying
+                    ? _controller.pause()
+                    : _controller.play();
+              });
+            },
+            backgroundColor: Colors.white12,
+            child: Icon(
+              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+              color: Colors.white,size: 32.0,
             ),
-          ],
-        ),
 
-      ],
+          ),
+        ],
+      ),
     ),
   );
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
 
   Widget buildCategoryNewlyAuctionItem(context) => Card(
     child: Column(
@@ -629,6 +774,4 @@ class HomeScreen extends StatelessWidget {
       ],
     ),
   );
-
-
 }

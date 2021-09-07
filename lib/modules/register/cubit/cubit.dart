@@ -48,6 +48,8 @@ class RegisterCubit extends Cubit<RegisterStates>
       email: email,
       phone: phone,
       uId: uId,
+      bio: 'write you bio ...',
+      image: 'https://image.freepik.com/free-vector/modern-vertical-banners-ramadan-kareem-cover-ramadan-mubarak-flyer-background-template-design-element-vector-illustration_3482-5035.jpg',
       isPhoneVerified: false,
     );
     FirebaseFirestore.instance

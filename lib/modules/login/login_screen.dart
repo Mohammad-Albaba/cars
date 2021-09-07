@@ -1,5 +1,5 @@
-import 'package:cars/layout/buyer_app/buyer_layout.dart';
-import 'package:cars/layout/seller_app/seller_layout.dart';
+import 'package:cars/layout/cars/buyer_layout.dart';
+import 'package:cars/layout/cars/seller_layout.dart';
 import 'package:cars/modules/login/cubit/cubit.dart';
 import 'package:cars/modules/login/cubit/states.dart';
 import 'package:cars/modules/register/register_screen.dart';
@@ -31,8 +31,8 @@ class LoginScreen extends StatelessWidget
                 key: 'uId',
                 value: state.uId,
             ).then((value){
-              navigateAndFinish(context, BuyerLayout());
-              // navigateAndFinish(context, SellerLayout());
+                navigateAndFinish(context, BuyerLayout());
+               // navigateAndFinish(context, SellerLayout());
             });
           }
         },

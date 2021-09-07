@@ -1,5 +1,5 @@
-import 'package:cars/layout/buyer_app/buyer_layout.dart';
-import 'package:cars/layout/seller_app/seller_layout.dart';
+import 'package:cars/layout/cars/buyer_layout.dart';
+import 'package:cars/layout/cars/seller_layout.dart';
 import 'package:cars/modules/register/cubit/cubit.dart';
 import 'package:cars/modules/register/cubit/states.dart';
 import 'package:cars/shared/components/components.dart';
@@ -37,8 +37,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         {
           if(state is CreateUserSuccessState)
           {
-              navigateAndFinish(context, BuyerLayout());
-              // navigateAndFinish(context, SellerLayout());
+             navigateAndFinish(context, BuyerLayout());
+             // navigateAndFinish(context, SellerLayout());
           }
         },
         builder: (context, state){

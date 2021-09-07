@@ -1,5 +1,8 @@
+import 'package:cars/shared/styles/colors.dart';
+import 'package:cars/shared/styles/icon_broken.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -10,7 +13,7 @@ Widget defaultButton({
   @required String text,
 }) =>  Container(
   width: width,
-  height: 40.0,
+  height: 50.0,
   child: MaterialButton(
     onPressed: function,
     child: Text(
@@ -41,7 +44,7 @@ Widget defaultTextButton({
     );
 
 Widget defaultFormField({
-  @required TextEditingController controller,
+  TextEditingController controller,
   @required TextInputType type,
   Function onSubmit,
   Function onChange,
@@ -50,7 +53,8 @@ Widget defaultFormField({
   bool isPassword = false,
   @required Function validate,
   @required String label,
-  @required IconData prefix,
+  String hint,
+   IconData prefix,
   IconData suffix,
   Function suffixPressed,
 }) =>  TextFormField(
@@ -64,9 +68,11 @@ Widget defaultFormField({
   validator: validate,
   decoration: InputDecoration(
     labelStyle: TextStyle(
-      fontSize: 20.0,
+      fontSize: 16.0,
+      color: Colors.grey,
     ),
     labelText: label,
+    hintText: hint,
     prefixIcon: Icon(
       prefix,
     ),
@@ -127,3 +133,52 @@ Color chooseToastColor(ToastStates state)
   }
   return color;
 }
+
+Widget myDivider() => Padding(
+  padding: const EdgeInsetsDirectional.only(
+    start: 10.0,
+    bottom: 16.0,
+  ),
+  child: Container(
+    width: double.infinity,
+    height: 1.0,
+    color: Colors.grey[300],
+  ),
+);
+
+Widget defaultAppBar({
+  @required BuildContext context,
+  String title,
+  List<Widget> actions,
+  AppBarTheme theme,
+  Color backgroundColor,
+}) => AppBar(
+  centerTitle: true,
+  backgroundColor: backgroundColor,
+  leading: IconButton(
+    onPressed: (){
+      Navigator.pop(context);
+    },
+    icon: Icon(
+      IconBroken.Arrow___Left_2,
+    ),
+  ),
+   titleSpacing: 90.0,
+  title: Text(
+    title,
+    textAlign: TextAlign.center,
+  ),
+  actions: actions,
+);
+
+Widget defaultCheckBox({
+  @required Function onChange,
+  @required String title,
+  bool isCheckbox = false,
+
+}) => CheckboxListTile(
+    controlAffinity: ListTileControlAffinity.leading,
+    title: Text(title),
+    value: isCheckbox,
+    onChanged: onChange,
+  );

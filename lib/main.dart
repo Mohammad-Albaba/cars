@@ -1,24 +1,27 @@
-import 'package:cars/layout/buyer_app/buyer_layout.dart';
-import 'package:cars/layout/seller_app/seller_layout.dart';
-import 'package:cars/modules/register/register_screen.dart';
-import 'package:cars/shared/network/cars_signin_screen.dart';
+import 'package:bloc/bloc.dart';
+import 'package:cars/layout/cars/buyer_layout.dart';
+import 'package:cars/layout/cars/cubit/cubit.dart';
+import 'package:cars/layout/cars/cubit/states.dart';
+import 'package:cars/layout/cars/seller_layout.dart';
+import 'package:cars/shared/bloc_observer.dart';
 import 'package:cars/modules/login/login_screen.dart';
 import 'package:cars/shared/components/components.dart';
 import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/network/local/cache_helper.dart';
+import 'package:cars/shared/network/remote/dio_helper.dart';
 import 'package:cars/shared/styles/themes.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-void main() async{
+void main() async
+{
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
 
+  Bloc.observer = MyBlocObserver();
+  DioHelper.init();
   await CacheHelper.init();
 
    uId = CacheHelper.getData(key: 'uId');
@@ -28,33 +31,105 @@ void main() async{
   if(uId != null)
   {
        // widget = UserType.Seller();
-       widget = BuyerLayout();
+        widget = BuyerLayout();
+        //widget = SellerLayout();
 
     // this.groupValue == UserType.Seller?
     // SellerLayout():
     // BuyerLayout();
   }else{
-    widget = LoginScreen();
+    widget = SplashScreen();
   }
 
-  runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.light,
-      home: SplashScreen(startWidget: widget,)));
+  runApp(
+    MyApp(
+        startWidget : widget,
+  ));
 }
 
-class SplashScreen extends StatelessWidget {
+class MyApp extends StatelessWidget
+{
   final Widget startWidget;
 
-  SplashScreen({
-    this.startWidget
-    });
+  MyApp({
+    this.startWidget,
+  });
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 3)).then((value){
       navigateAndFinish(context, startWidget,);
+    });
+    return BlocProvider(
+        create: (BuildContext context) => AppCubit()..getUserData(),
+        child:  BlocConsumer<AppCubit, AppStates>(
+          listener: (context, state){},
+          builder: (context, state){
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: ThemeMode.light,
+              home: startWidget ,
+            );
+          },
+        ),
+    );
+
+   }
+ }
+
+// class MyApp extends StatelessWidget
+// {
+//   final Widget startWidget;
+//
+//   MyApp({
+//     this.startWidget,
+//   });
+//   @override
+//   Widget build(BuildContext context) {
+//     Future.delayed(Duration(seconds: 3)).then((value){
+//       navigateAndFinish(context, startWidget,);
+//     });
+//     return MultiBlocProvider(
+//       providers: [
+//         BlocProvider(
+//           create: (BuildContext context) => SellerCubit()..getUserData(),
+//         ),
+//         BlocProvider(
+//           create: (BuildContext context) => BuyerCubit()..getUserData(),
+//         ),
+//       ],
+//         child: BlocConsumer<BuyerCubit, BuyerStates>(
+//         listener: (context, state){},
+//         builder: (context, state) {
+//           // return widget here based on BlocA's state
+//           return BlocConsumer<SellerCubit, SellerStates>(
+//             listener: (context, state){},
+//             builder: (context, state){
+//               return MaterialApp(
+//                 debugShowCheckedModeBanner: false,
+//                 theme: lightTheme,
+//                 darkTheme: darkTheme,
+//                 themeMode: ThemeMode.light,
+//                 home: startWidget ,
+//               );
+//             },
+//           );
+//         },
+//       ),
+//     );
+//
+//    }
+//  }
+
+
+
+
+class SplashScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 3)).then((value){
+      navigateAndFinish(context, LoginScreen(),);
     });
     return Scaffold(
       body: Stack(

@@ -1,5 +1,5 @@
-import 'package:cars/layout/seller_app/cubit/cubit.dart';
-import 'package:cars/layout/seller_app/cubit/states.dart';
+import 'package:cars/layout/cars/cubit/cubit.dart';
+import 'package:cars/layout/cars/cubit/states.dart';
 import 'package:cars/shared/styles/icon_broken.dart';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,48 +9,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SellerLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => SellerCubit()..getUserData(),
-      child: BlocConsumer<SellerCubit, SellerStates>(
-        listener: (context, state){},
-        builder: (context, state){
-          var cubit = SellerCubit.get(context);
-          return Scaffold(
-            // appBar: AppBar(
-            //   title: Text(
-            //       cubit.titles[cubit.currentIndex],
-            //   ),
-            // ),
-            body: cubit.screens[cubit.currentIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: cubit.currentIndex,
-              onTap: (index){
-                cubit.changeBottomNav(index);
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                      IconBroken.Document,
-                  ),
-                  label: 'My Auctions',
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state){},
+      builder: (context, state){
+        var cubit = AppCubit.get(context);
+        return Scaffold(
+          body: cubit.screensSeller[cubit.currentIndexSeller],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: cubit.currentIndexSeller,
+            onTap: (index){
+              cubit.changeBottomNavSeller(index);
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                    IconBroken.Document,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    IconBroken.Plus,
-                  ),
-                  label: 'Add Auction',
+                label: 'My Auctions',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  IconBroken.Plus,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    IconBroken.User,
-                  ),
-                  label: 'Profile',
+                label: 'Add Auction',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  IconBroken.User,
                 ),
-              ],
-            ),
-          );
-        },
-      ),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
