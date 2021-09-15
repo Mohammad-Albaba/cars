@@ -29,6 +29,8 @@ class _ProfileSellerScreenState extends State<ProfileSellerScreen> {
         listener: (context, state){},
         builder: (context, state){
           var userModel = AppCubit.get(context).userModel;
+          var profileImage = AppCubit.get(context).profileImage;
+
           return Scaffold(
             backgroundColor: bgColor,
             appBar: AppBar(
@@ -49,9 +51,9 @@ class _ProfileSellerScreenState extends State<ProfileSellerScreen> {
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 child: CircleAvatar(
                   radius: 27.0,
-                  backgroundImage: NetworkImage(
-                    '${userModel.image}',
-                  ),
+                  backgroundImage: profileImage == null ?
+                  NetworkImage('${userModel.image}',)
+                      : FileImage(profileImage),
                 ),
               ),
                       SizedBox(

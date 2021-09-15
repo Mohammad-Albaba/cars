@@ -34,6 +34,7 @@ class _AddAuctionScreen4State extends State<AddAuctionScreen4> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state){},
       builder: (context, state){
+        var model = AppCubit.get(context).postModel;
         return Scaffold(
           appBar:  defaultAppBar(
             backgroundColor: bgColor,
@@ -196,7 +197,7 @@ class _AddAuctionScreen4State extends State<AddAuctionScreen4> {
                   SizedBox(height: 30.0,),
                   defaultButton(
                       function: (){
-                        navigateTo(context, AddAuctionScreen5());
+                        navigateTo(context, AddAuctionScreen5(postModel: model,));
                       },
                       text: 'Next',
                       radius: 6.0,

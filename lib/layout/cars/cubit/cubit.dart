@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:cars/layout/cars/cubit/states.dart';
-import 'package:cars/models/cars_model.dart';
+import 'package:cars/models/user_model.dart';
 import 'package:cars/models/post_model.dart';
 import 'package:cars/modules/buyer_module/Cars_Buyer/cars_Screen.dart';
 import 'package:cars/modules/buyer_module/Home_Buyer/home_Screen.dart';
 import 'package:cars/modules/buyer_module/My_Bids_Buyer/My_Bids_Screen.dart';
 import 'package:cars/modules/buyer_module/profile_buyer/Profile_Screen.dart';
 import 'package:cars/modules/seller_module/Add_Auctions/add_auction_Screen1.dart';
+import 'package:cars/modules/seller_module/Add_Auctions/add_auction_Screen2.dart';
 import 'package:cars/modules/seller_module/My_Auctions/my_auction_Screen.dart';
 import 'package:cars/modules/seller_module/Profile/profile_Screen.dart';
 import 'package:cars/shared/components/constant.dart';
@@ -224,6 +225,7 @@ class AppCubit extends Cubit<AppStates>{
     );
   }
 
+  PostModel postModel = PostModel();
   void createPost({
     String postImage,
     @required String dateTime,
@@ -232,7 +234,7 @@ class AppCubit extends Cubit<AppStates>{
   }){
     emit(CreatePostLoadingState());
 
-    PostModel model = PostModel(
+    postModel = PostModel(
         uId: userModel.uId,
         postImage: postImage??'',
         dateTime: dateTime,
@@ -242,7 +244,7 @@ class AppCubit extends Cubit<AppStates>{
 
     FirebaseFirestore.instance
         .collection('posts')
-        .add(model.toMap())
+        .add(postModel.toMap())
         .then((value)
     {
       print(value);

@@ -1,4 +1,5 @@
 
+import 'package:cars/modules/buyer_module/Car_Details/car_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -191,17 +192,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    height: 230.0,
-                    child: ListView.separated(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => buildCategoryNewAuctionItem(context),
-                      separatorBuilder: (context, index) => SizedBox(
-                        width: 8.0,
+                  InkWell(
+                    child: Container(
+                      height: 230.0,
+                      child: ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => buildCategoryNewAuctionItem(context),
+                        separatorBuilder: (context, index) => SizedBox(
+                          width: 8.0,
+                        ),
+                        itemCount: 10,
                       ),
-                      itemCount: 10,
                     ),
+                    onTap: (){
+                      navigateTo(context, CarDetails());
+                    },
                   ),
                   SizedBox(
                     height: 10.0,

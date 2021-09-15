@@ -1,6 +1,6 @@
 import 'package:cars/layout/cars/cubit/cubit.dart';
 import 'package:cars/layout/cars/cubit/states.dart';
-import 'package:cars/models/cars_model.dart';
+import 'package:cars/models/user_model.dart';
 import 'package:cars/shared/components/components.dart';
 import 'package:cars/shared/styles/colors.dart';
 import 'package:cars/shared/styles/icon_broken.dart';

@@ -1,4 +1,4 @@
-import 'package:cars/models/cars_model.dart';
+import 'package:cars/models/user_model.dart';
 import 'package:cars/modules/register/cubit/states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +15,7 @@ class RegisterCubit extends Cubit<RegisterStates>
 
 
   void userRegister({
+    @required bool isSeller,
     @required String name,
     @required String email,
     @required String password,
@@ -29,6 +30,7 @@ class RegisterCubit extends Cubit<RegisterStates>
      ).then((value){
        userCreate(
          uId: value.user.uid,
+         isSeller: isSeller,
          name: name,
          email: email,
          phone: phone,
@@ -37,13 +39,16 @@ class RegisterCubit extends Cubit<RegisterStates>
        emit(RegisterErrorState(error.toString()));
      });
   }
+
   void userCreate({
+    @required bool isSeller,
     @required String name,
     @required String email,
     @required String phone,
     @required String uId,
   }){
     UserModel model = UserModel(
+      isSeller: isSeller,
       name: name,
       email: email,
       phone: phone,

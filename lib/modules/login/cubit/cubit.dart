@@ -1,4 +1,11 @@
+import 'package:cars/layout/cars/buyer_layout.dart';
+import 'package:cars/layout/cars/cubit/cubit.dart';
+import 'package:cars/layout/cars/seller_layout.dart';
+import 'package:cars/models/user_model.dart';
 import 'package:cars/modules/login/cubit/states.dart';
+import 'package:cars/shared/components/components.dart';
+import 'package:cars/shared/components/constant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +16,8 @@ class LoginCubit extends Cubit<LoginStates>
 {
   LoginCubit() : super(LoginInitialState());
 
-  static LoginCubit get(context) => BlocProvider.of(context);
 
+  static LoginCubit get(context) => BlocProvider.of(context);
 
   void userLogin({
   @required String email,
@@ -30,6 +37,7 @@ class LoginCubit extends Cubit<LoginStates>
         emit(LoginErrorState(error.toString()));
      });
   }
+
 
   IconData suffix = Icons.visibility_outlined;
   bool isPassword = true;

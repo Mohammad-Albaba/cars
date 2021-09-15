@@ -1,5 +1,6 @@
 import 'package:cars/layout/cars/cubit/cubit.dart';
 import 'package:cars/layout/cars/cubit/states.dart';
+import 'package:cars/models/post_model.dart';
 import 'package:cars/modules/seller_module/Add_Auctions/add_auction_Screen3.dart';
 import 'package:cars/shared/components/components.dart';
 import 'package:cars/shared/styles/colors.dart';
@@ -9,6 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class AddAuctionScreen2 extends StatefulWidget {
+  PostModel postModel;
+  AddAuctionScreen2({
+    this.postModel
+  });
   @override
   _AddAuctionScreen2State createState() => _AddAuctionScreen2State();
 }

@@ -1,8 +1,12 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:cars/layout/cars/buyer_layout.dart';
 import 'package:cars/layout/cars/cubit/cubit.dart';
 import 'package:cars/layout/cars/cubit/states.dart';
 import 'package:cars/layout/cars/seller_layout.dart';
+import 'package:cars/models/user_model.dart';
+import 'package:cars/modules/login/cubit/cubit.dart';
+import 'package:cars/modules/register/cubit/cubit.dart';
 import 'package:cars/shared/bloc_observer.dart';
 import 'package:cars/modules/login/login_screen.dart';
 import 'package:cars/shared/components/components.dart';
@@ -10,9 +14,11 @@ import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/network/local/cache_helper.dart';
 import 'package:cars/shared/network/remote/dio_helper.dart';
 import 'package:cars/shared/styles/themes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async
 {
@@ -28,16 +34,11 @@ void main() async
 
   Widget widget;
 
-  if(uId != null)
-  {
-       // widget = UserType.Seller();
-        widget = BuyerLayout();
-        //widget = SellerLayout();
 
-    // this.groupValue == UserType.Seller?
-    // SellerLayout():
-    // BuyerLayout();
-  }else{
+  if(uId != null) {
+    widget = SplashScreen();
+  }
+  else{
     widget = SplashScreen();
   }
 
@@ -59,22 +60,32 @@ class MyApp extends StatelessWidget
     Future.delayed(Duration(seconds: 3)).then((value){
       navigateAndFinish(context, startWidget,);
     });
-    return BlocProvider(
-        create: (BuildContext context) => AppCubit()..getUserData(),
-        child:  BlocConsumer<AppCubit, AppStates>(
-          listener: (context, state){},
-          builder: (context, state){
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: ThemeMode.light,
-              home: startWidget ,
-            );
-          },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+        create: (BuildContext context) => AppCubit()..getUserData()..userModel,
         ),
-    );
+       BlocProvider(
+          create: (BuildContext context) => RegisterCubit(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => LoginCubit(),
+        ),
+      ],
+      child:  BlocConsumer<AppCubit, AppStates>(
+            listener: (context, state){},
+            builder: (context, state){
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: ThemeMode.light,
+                home: startWidget ,
+              );
+            },
+          ),
 
+    );
    }
  }
 
@@ -138,19 +149,10 @@ class SplashScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: Image(
-            image: AssetImage('assets/images/bg.png'),
-            fit: BoxFit.cover,
+              image: AssetImage('assets/images/bg.png'),
+              fit: BoxFit.cover,
             ),
-
-          // child: SvgPicture.network(
-          //   'https://commons.wikimedia.org/wiki/File:Bg_Cars.svg',
-          //   placeholderBuilder: (BuildContext context) => Container(
-          //       padding: const EdgeInsets.all(30.0),
-          //       child: const CircularProgressIndicator()),
-          // ),
           ),
-
-
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

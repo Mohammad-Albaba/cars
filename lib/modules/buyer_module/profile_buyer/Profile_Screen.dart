@@ -4,6 +4,7 @@ import 'package:cars/modules/buyer_module/profile_buyer/My_Profile/My_Profile.da
 import 'package:cars/modules/buyer_module/profile_buyer/My_Profile/Settings_Screen.dart';
 import 'package:cars/modules/buyer_module/profile_buyer/My_Profile/Support_Screen.dart';
 import 'package:cars/modules/buyer_module/profile_buyer/My_Profile/Terms_Condition.dart';
+import 'package:cars/modules/buyer_module/profile_buyer/My_Profile/payment/Payment_Screen.dart';
 import 'package:cars/modules/login/login_screen.dart';
 import 'package:cars/shared/bloc_observer.dart';
 import 'package:cars/shared/components/components.dart';
@@ -26,7 +27,6 @@ class _ProfileBuyerScreenState extends State<ProfileBuyerScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state){},
       builder: (context, state){
-        Bloc.observer = MyBlocObserver();
         var userModel = AppCubit.get(context).userModel;
         var profileImage = AppCubit.get(context).profileImage;
         return Scaffold(
@@ -49,8 +49,9 @@ class _ProfileBuyerScreenState extends State<ProfileBuyerScreen> {
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       child: CircleAvatar(
                         radius: 27.0,
-                        backgroundImage: profileImage == null ? NetworkImage(
-                          '${userModel.image}',)  : FileImage(profileImage),
+                        backgroundImage: profileImage == null ?
+                        NetworkImage('${userModel.image}',)
+                            : FileImage(profileImage),
                       ),
                     ),
                     SizedBox(
@@ -105,7 +106,6 @@ class _ProfileBuyerScreenState extends State<ProfileBuyerScreen> {
                   ),
                 ),
               ],
-
             ),
           ),
           body: SingleChildScrollView(
@@ -161,7 +161,7 @@ class _ProfileBuyerScreenState extends State<ProfileBuyerScreen> {
                           ],
                         ),
                         onTap: (){
-
+                          navigateTo(context, PaymentBuyer());
                         },
                       ),
                       SizedBox(
