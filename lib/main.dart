@@ -32,11 +32,25 @@ void main() async
 
    uId = CacheHelper.getData(key: 'uId');
 
-  Widget widget;
+   Widget widget;
 
-
+  UserModel userModel;
   if(uId != null) {
-    widget = SplashScreen();
+  await  FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .get()
+        .then((value){
+      print(value.data());
+      userModel = UserModel.fromJson(value.data());
+      if(value.get('isSeller') == false){
+        print(' BuyerLayout');
+        widget = BuyerLayout();
+      }else if(value.get('isSeller') == true){
+        widget = SellerLayout();
+        print(' SellerLayout');
+      }
+    });
   }
   else{
     widget = SplashScreen();
