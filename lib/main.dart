@@ -16,15 +16,46 @@ import 'package:cars/shared/network/remote/dio_helper.dart';
 import 'package:cars/shared/styles/themes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async
+{
+  print('on background message');
+  print(message.data.toString());
+  showToast(text: 'on background message', state: ToastStates.SUCCESS);
+}
 void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+  
+  var token = await FirebaseMessaging.instance.getToken();
+
+  print(token);
+
+  // foreground fcm
+  FirebaseMessaging.onMessage.listen((event)
+  {
+    print('on message');
+    print(event.data.toString());
+    showToast(text: 'on message', state: ToastStates.SUCCESS);
+  });
+
+  // when click on notification to open app
+  FirebaseMessaging.onMessageOpenedApp.listen((event)
+  {
+    print('on message opened app');
+    print(event.data.toString());
+    showToast(text: 'on message opened app', state: ToastStates.SUCCESS);
+
+  });
+
+  // background fcm
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  
 
   Bloc.observer = MyBlocObserver();
   DioHelper.init();
@@ -83,7 +114,7 @@ class MyApp extends StatelessWidget
           create: (BuildContext context) => RegisterCubit(),
         ),
         BlocProvider(
-          create: (BuildContext context) => LoginCubit(),
+          create: (BuildContext context) => LoginCubit()..userModel,
         ),
       ],
       child:  BlocConsumer<AppCubit, AppStates>(
@@ -149,13 +180,15 @@ class MyApp extends StatelessWidget
 
 
 
-
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 3)).then((value){
-      navigateAndFinish(context, LoginScreen(),);
-    });
+
+   Future.delayed(Duration(seconds: 3)).then((value){
+
+     navigateAndFinish(context, LoginScreen(),);
+      }
+    );
     return Scaffold(
       body: Stack(
         children: [

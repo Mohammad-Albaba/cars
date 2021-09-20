@@ -650,7 +650,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   Widget buildCategoryVideoItem(context) => Padding(
-    padding: const EdgeInsets.only(left: 4.0),
+    padding: const EdgeInsets.only(left: 4.0,bottom: 8.0),
     child: Container(
       width: 280.0,
       height: 230,
@@ -677,7 +677,6 @@ class _HomeScreenState extends State<HomeScreen> {
               _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
               color: Colors.white,size: 32.0,
             ),
-
           ),
         ],
       ),

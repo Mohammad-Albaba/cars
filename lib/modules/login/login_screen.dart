@@ -9,81 +9,73 @@ import 'package:cars/modules/register/register_screen.dart';
 import 'package:cars/shared/components/components.dart';
 import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/network/local/cache_helper.dart';
+import 'package:cars/shared/styles/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget
 {
+
   var formKey = GlobalKey<FormState>();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
-  UserModel userModel;
+
   @override
   Widget build(BuildContext context) {
 
     return BlocConsumer<LoginCubit, LoginStates>(
       listener: (context, state){
+        var userModel = LoginCubit.get(context).userModel;
         if(state is LoginSuccessState){
           CacheHelper.saveData(
             key: 'uId',
             value: state.uId,
-          ).then((value){
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(uId)
-                .get()
-                .then((value){
-              print(value.data());
-              userModel = UserModel.fromJson(value.data());
-              if(value.get('isSeller') == false){
-                print(' BuyerLayout');
-                navigateAndFinish(context, BuyerLayout());
-              }else if(value.get('isSeller') == true){
-                navigateAndFinish(context, SellerLayout());
-                print(' SellerLayout');
-              }
+          ).then((value)async{
+            FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: emailController.text,
+              password: passwordController.text,
+            ).then((value){
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(value.user.uid)
+                  .get()
+                  .then((value){
+                print(value.data());
+                userModel = UserModel.fromJson(value.data());
+                if(value.get('isSeller') == false){
+                  print('BuyerLayout');
+                       navigateAndFinish(context , BuyerLayout());
+                }else if(value.get('isSeller') == true){
+                  navigateAndFinish(context, SellerLayout());
+                  print('SellerLayout');
+                }
+              });
+            }).catchError((error){
             });
 
-            //   if(userModel.isSeller == true){
-            //       navigateAndFinish(context, SellerLayout());
-            //   }
-            //       navigateAndFinish(context, BuyerLayout());
-            // }).catchError((error){
-            //   error.toString();
-            /////////////////////
-            // UserModel userModel;
-            // void typeUser()
-            // {
-            //   FirebaseFirestore.instance
-            //       .collection('users')
-            //       .doc(uId)
-            //       .get()
-            //       .then((value){
-            //     userModel = UserModel.fromJson(value.data());
-            //     if(userModel.isSeller == true){
-            //       MaterialPageRoute(
-            //         builder: (context) => SellerLayout(),
-            //       );
-            //     }
-            //     MaterialPageRoute(
-            //       builder: (context) => BuyerLayout(),
-            //     );
-            //   }).catchError((error){
-            //     error.toString();
-            //   });
-            //
-            // }
 
-            // if(AppCubit.get(context).userModel.isSeller == true){
-            //   navigateAndFinish(context, SellerLayout());
-            // }else
-            //   {
-            //     navigateAndFinish(context, BuyerLayout());
-            //   }
+           // await FirebaseFirestore.instance
+           //      .collection('users')
+           //      .doc(uId)
+           //      .get()
+           //      .then((value){
+           //     print(value.data());
+           //     userModel = UserModel.fromJson(value.data());
+           //     if(value.get('isSeller') == false){
+           //     print(' BuyerLayout');
+           //     navigateAndFinish(context, BuyerLayout());
+           //     // navigateAndFinish(context, BuyerLayout());
+           //   }else if(value.get('isSeller') == true){
+           //     navigateAndFinish(context, SellerLayout());
+           //     print(' SellerLayout');
+           //   }
+           // });
           });
           }
+
           if(state is LoginErrorState){
               showToast(
                   text: state.error,
@@ -93,8 +85,6 @@ class LoginScreen extends StatelessWidget
       },
       builder: (context, state){
         return Scaffold(
-          appBar: AppBar(
-          ),
           body: Center(
             child: SingleChildScrollView(
               child: Padding(
@@ -163,14 +153,21 @@ class LoginScreen extends StatelessWidget
                       ConditionalBuilder(
                         condition: state is! LoginLoadingState,
                         builder: (context) => defaultButton(
-                          function: () async{
+                          function: () {
                             if(formKey.currentState.validate())
                             {
                               LoginCubit.get(context).userLogin(
                                   email: emailController.text,
-                                  password: passwordController.text
+                                  password: passwordController.text,
                               );
+                              // if(userModel.name != null){
+                              //   print('Moh');
+                              //   navigateAndFinish(context , BuyerLayout());
+                              // }else{
+                              //   navigateAndFinish(context, SellerLayout());
+                              // }
                             }
+
                           },
                           text: 'login',
                           isUpperCase: true,
@@ -186,7 +183,6 @@ class LoginScreen extends StatelessWidget
                           Text(
                             'Don\'t have an account?',
                           ),
-
                           defaultTextButton(
                             function:  (){
                               navigateTo(
@@ -208,4 +204,5 @@ class LoginScreen extends StatelessWidget
       },
     );
   }
+
 }

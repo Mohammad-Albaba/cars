@@ -8,9 +8,12 @@ import 'package:cars/modules/buyer_module/profile_buyer/My_Profile/payment/Payme
 import 'package:cars/modules/login/login_screen.dart';
 import 'package:cars/shared/bloc_observer.dart';
 import 'package:cars/shared/components/components.dart';
+import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/network/local/cache_helper.dart';
 import 'package:cars/shared/styles/colors.dart';
 import 'package:cars/shared/styles/icon_broken.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,8 +30,18 @@ class _ProfileBuyerScreenState extends State<ProfileBuyerScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state){},
       builder: (context, state){
+
         var userModel = AppCubit.get(context).userModel;
         var profileImage = AppCubit.get(context).profileImage;
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(uId)
+            .get()
+            .then((value){
+            profileImage == null ? userModel.image : FileImage(profileImage);
+        })
+            .catchError((error){
+        });
         return Scaffold(
           backgroundColor: bgColor,
           appBar: AppBar(
@@ -261,15 +274,14 @@ class _ProfileBuyerScreenState extends State<ProfileBuyerScreen> {
                             ),
                           ],
                         ),
-                        onTap: (){
+                        onTap: ()async{
                           CacheHelper.removeData(key: 'uId');
-                          navigateTo(context, LoginScreen());
+                          await FirebaseAuth.instance.signOut();
+                          navigateAndFinish(context, LoginScreen());
+
                         },
                       ),
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      myDivider(),
+
                     ],
                   ),
                 ),

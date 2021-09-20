@@ -29,14 +29,14 @@ class _CarDetailsState extends State<CarDetails> {
 
   List<BoardingModel> boarding = [
     BoardingModel(
-        image: 'assets/images/bg.png',
+      image: 'assets/images/bg.png',
 
     ),
     BoardingModel(
-        image: 'assets/images/bg.png',
+      image: 'assets/images/bg.png',
     ),
     BoardingModel(
-        image: 'assets/images/bg.png',
+      image: 'assets/images/bg.png',
     ),
   ];
   // ExpansionList
@@ -113,7 +113,8 @@ class _CarDetailsState extends State<CarDetails> {
           }).toList(),
 
         ),
-        SizedBox(height: 13.0,),
+        Container(child: SizedBox(height: 13.0,),color: Colors.white,),
+
         ExpansionPanelList(
           expansionCallback: (int index, isExpandedTwo){
             setState(() {
@@ -235,10 +236,12 @@ class _CarDetailsState extends State<CarDetails> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-        listener: (context, state){},
-        builder: (context, state){
-          return Scaffold(
-            body: Column(
+      listener: (context, state){},
+      builder: (context, state){
+        return Scaffold(
+          body: Container(
+            color: Colors.white,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
@@ -324,7 +327,7 @@ class _CarDetailsState extends State<CarDetails> {
                             border: Border.all(color: Colors.white),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey,
+                                color: Colors.grey.withOpacity(0.5),
                                 offset: Offset(0.0, 1.0), //(x,y)
                                 blurRadius: 6.0,
                               ),
@@ -725,8 +728,9 @@ class _CarDetailsState extends State<CarDetails> {
 
               ],
             ),
-          );
-        },
+          ),
+        );
+      },
     );
 
   }

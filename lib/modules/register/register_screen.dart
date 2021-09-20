@@ -2,6 +2,7 @@ import 'package:cars/layout/cars/buyer_layout.dart';
 import 'package:cars/layout/cars/cubit/cubit.dart';
 import 'package:cars/layout/cars/seller_layout.dart';
 import 'package:cars/models/user_model.dart';
+import 'package:cars/modules/login/login_screen.dart';
 import 'package:cars/modules/register/cubit/cubit.dart';
 import 'package:cars/modules/register/cubit/states.dart';
 import 'package:cars/shared/components/components.dart';
@@ -10,6 +11,7 @@ import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/components/constant.dart';
 import 'package:cars/shared/network/local/cache_helper.dart';
+import 'package:cars/shared/styles/icon_broken.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
@@ -63,17 +65,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       },
       builder: (context, state){
+        var model = AppCubit.get(context).userModel;
         return Scaffold(
-          appBar: AppBar(),
           body: Center(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  right: 20.0,
+                  bottom: 20.0,
+                ),
                 child: Form(
                   key: formKey,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      InkWell(
+                          child: Icon(
+                              IconBroken.Arrow___Left_2,
+                          ),
+                          onTap: (){
+                            navigateTo(context, LoginScreen());
+                          },
+                      ),
+                      SizedBox(height: 15.0,),
                       Text(
                         'REGISTER',
                         style: Theme.of(context).textTheme.headline4.copyWith(
@@ -89,7 +105,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 10.0,
                       ),
-
                       Text(
                         'Account type',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -100,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: 10.0,
                     ),
                     Row(
-                    children: [
+                      children: [
                     Expanded(
                     child: Container(
                       decoration: BoxDecoration(
@@ -243,6 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   password: passwordController.text,
                                   phone: phoneController.text,
                               );
+                              model.isSeller = UserType.Seller == groupValue ? true : false ;
                                 if(groupValue == UserType.Seller)
                                 {
                                   navigateAndFinish(context, SellerLayout());

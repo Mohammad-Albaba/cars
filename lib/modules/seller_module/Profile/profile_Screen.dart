@@ -11,6 +11,7 @@ import 'package:cars/shared/components/components.dart';
 import 'package:cars/shared/network/local/cache_helper.dart';
 import 'package:cars/shared/styles/colors.dart';
 import 'package:cars/shared/styles/icon_broken.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -264,15 +265,12 @@ class _ProfileSellerScreenState extends State<ProfileSellerScreen> {
                               ),
                             ],
                           ),
-                          onTap: (){
+                          onTap: ()async{
                             CacheHelper.removeData(key: 'uId');
-                            navigateTo(context, LoginScreen());
+                            await FirebaseAuth.instance.signOut();
+                            navigateAndFinish(context, LoginScreen());
                           },
                         ),
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        myDivider(),
                       ],
                     ),
                   ),

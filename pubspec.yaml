@@ -52,6 +52,7 @@ dependencies:
   share: ^2.0.4
   video_player: ^2.1.15
   cached_network_image: ^3.1.0
+  firebase_messaging: ^10.0.0
 
 
 

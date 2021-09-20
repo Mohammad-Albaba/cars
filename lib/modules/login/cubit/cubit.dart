@@ -1,3 +1,5 @@
+
+
 import 'package:cars/layout/cars/buyer_layout.dart';
 import 'package:cars/layout/cars/cubit/cubit.dart';
 import 'package:cars/layout/cars/seller_layout.dart';
@@ -16,20 +18,36 @@ class LoginCubit extends Cubit<LoginStates>
 {
   LoginCubit() : super(LoginInitialState());
 
-
   static LoginCubit get(context) => BlocProvider.of(context);
 
-  void userLogin({
+  UserModel userModel;
+   void userLogin({
   @required String email,
   @required String password,
 })
   {
      emit(LoginLoadingState());
-
      FirebaseAuth.instance.signInWithEmailAndPassword(
          email: email,
-         password: password
+         password: password,
      ).then((value){
+       FirebaseFirestore.instance
+           .collection('users')
+           .doc(value.user.uid)
+           .get()
+           .then((value){
+         print(value.data());
+         userModel = UserModel.fromJson(value.data());
+         if(value.get('isSeller') == false){
+
+           print('BuyerLayout');
+      //     navigateAndFinish(context , BuyerLayout());
+         }else if(value.get('isSeller') == true){
+           SellerLayout();
+           //    navigateAndFinish(context, SellerLayout());
+         //  print('SellerLayout');
+         }
+       });
        print(value.user.email);
        print(value.user.uid);
        emit(LoginSuccessState(value.user.uid));
@@ -47,4 +65,5 @@ class LoginCubit extends Cubit<LoginStates>
     suffix = isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
     emit(ChangePasswordVisibilityState());
   }
+
 }
